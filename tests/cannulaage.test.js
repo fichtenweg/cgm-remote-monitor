@@ -4,14 +4,13 @@ require('should');
 var levels = require('../lib/levels');
 
 describe('cage', function ( ) {
+  var cage = require('../lib/plugins/cannulaage')();
+  var sandbox = require('../lib/sandbox')();
   var env = require('../env')();
   var ctx = {};
   ctx.ddata = require('../lib/data/ddata')();
   ctx.notifications = require('../lib/notifications')(env, ctx);
-  ctx.language = require('../lib/language')();
 
-  var cage = require('../lib/plugins/cannulaage')(ctx);
-  var sandbox = require('../lib/sandbox')();
   function prepareSandbox ( ) {
     var sbx = require('../lib/sandbox')().serverInit(env, ctx);
     sbx.offerProperty('iob', function () {
@@ -40,7 +39,6 @@ describe('cage', function ( ) {
       }
     };
 
-    ctx.language = require('../lib/language')();
     var sbx = sandbox.clientInit(ctx, Date.now(), data);
     cage.setProperties(sbx);
     cage.updateVisualisation(sbx);
@@ -66,7 +64,7 @@ describe('cage', function ( ) {
         }
       }
     };
-    ctx.language = require('../lib/language')();
+
     var sbx = sandbox.clientInit(ctx, Date.now(), data);
     cage.setProperties(sbx);
     cage.updateVisualisation(sbx);
