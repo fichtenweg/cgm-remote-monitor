@@ -4,15 +4,10 @@ var _ = require('lodash');
 var should = require('should');
 var moment = require('moment');
 
-var ctx = {
-  language: require('../lib/language')()
-};
-ctx.language.set('en');
 var env = require('../env')();
-var pump = require('../lib/plugins/pump')(ctx);
+var pump = require('../lib/plugins/pump')();
 var sandbox = require('../lib/sandbox')();
 var levels = require('../lib/levels');
-ctx.levels = levels;
 
 var statuses = [{
   created_at: '2015-12-05T17:35:00.000Z'
@@ -68,7 +63,6 @@ describe('pump', function ( ) {
           done();
         }
       }
-      , language: require('../lib/language')()
     };
 
     var sbx = sandbox.clientInit(ctx, now.valueOf(), {devicestatus: statuses});
@@ -99,7 +93,6 @@ describe('pump', function ( ) {
         units: 'mg/dl'
       }
       , notifications: require('../lib/notifications')(env, ctx)
-      , language: require('../lib/language')()
     };
 
     ctx.notifications.initRequests();
@@ -123,7 +116,6 @@ describe('pump', function ( ) {
         units: 'mg/dl'
       }
       , notifications: require('../lib/notifications')(env, ctx)
-      , language: require('../lib/language')()
     };
 
     ctx.notifications.initRequests();
@@ -151,7 +143,6 @@ describe('pump', function ( ) {
         units: 'mg/dl'
       }
       , notifications: require('../lib/notifications')(env, ctx)
-      , language: require('../lib/language')()
     };
 
     ctx.notifications.initRequests();
@@ -180,7 +171,6 @@ describe('pump', function ( ) {
         units: 'mg/dl'
       }
       , notifications: require('../lib/notifications')(env, ctx)
-      , language: require('../lib/language')()
     };
 
     ctx.notifications.initRequests();
@@ -208,7 +198,6 @@ describe('pump', function ( ) {
         units: 'mg/dl'
       }
       , notifications: require('../lib/notifications')(env, ctx)
-      , language: require('../lib/language')()
     };
 
     ctx.notifications.initRequests();
@@ -236,7 +225,6 @@ describe('pump', function ( ) {
         units: 'mg/dl'
       }
       , notifications: require('../lib/notifications')(env, ctx)
-      , language: require('../lib/language')()
     };
 
     ctx.notifications.initRequests();
@@ -252,34 +240,6 @@ describe('pump', function ( ) {
     var highest = ctx.notifications.findHighestAlarm('Pump');
     should.not.exist(highest);
     done();
-  });
-
-  it('should handle alexa requests', function (done) {
-    var ctx = {
-      settings: {
-        units: 'mg/dl'
-      }
-      , notifications: require('../lib/notifications')(env, ctx)
-      , language: require('../lib/language')()
-    };
-    ctx.language.set('en');
-    var sbx = sandbox.clientInit(ctx, now.valueOf(), {devicestatus: statuses});
-    pump.setProperties(sbx);
-
-    pump.alexa.intentHandlers.length.should.equal(2);
-
-    pump.alexa.intentHandlers[0].intentHandler(function next(title, response) {
-      title.should.equal('Remaining insulin');
-      response.should.equal('You have 86.4 units remaining');
-
-      pump.alexa.intentHandlers[1].intentHandler(function next(title, response) {
-        title.should.equal('Pump battery');
-        response.should.equal('Your pump battery is at 1.52 volts');
-        done();
-      }, [], sbx);
-
-    }, [], sbx);
-
   });
 
 });
